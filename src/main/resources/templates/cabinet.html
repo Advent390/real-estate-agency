@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Особистий кабінет — Метраж</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <h1 class="section-title">Особистий кабінет</h1>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="favorites">
+            Обране (<span th:text="${favorites.size()}"></span>)
+        </button>
+        <button class="tab" data-tab="viewings">
+            Мої заявки на перегляд (<span th:text="${viewings.size()}"></span>)
+        </button>
+    </div>
+
+    <div id="tab-favorites" class="tab-content">
+        <div class="objects-grid" th:if="${!favorites.isEmpty()}">
+            <div class="card" th:each="o : ${favorites}">
+                <a th:href="@{/object/{id}(id=${o.objectId})}">
+                    <div class="card-img"
+                         th:style="'background-image:url(' + (${o.mainPhoto} ?: '/img/placeholder.jpg') + ');'">
+                        <span class="card-badge"
+                              th:classappend="${o.archived} ? 'card-status-archived' : ''"
+                              th:text="${o.type.name}"></span>
+                    </div>
+                </a>
+                <div class="card-body">
+                    <div class="card-title">
+                        <a th:href="@{/object/{id}(id=${o.objectId})}"
+                           th:text="${o.street} + ', ' + ${o.houseNumber}"></a>
+                    </div>
+                    <div class="card-meta">
+                        <div class="card-meta-row">📍 <span th:text="${o.district.name}"></span> р-н</div>
+                        <div class="card-meta-row">📐 <span th:text="${o.totalArea}"></span> м²</div>
+                    </div>
+                    <div class="card-price" th:text="${@priceFormatter.format(o.price)}"></div>
+                    <form method="post" th:action="@{/object/{id}/favorite(id=${o.objectId})}" style="margin-top:12px;">
+                        <button type="submit" class="btn btn-outline btn-sm">Видалити з обраного</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="empty-state" th:if="${favorites.isEmpty()}">
+            <p>В обраному поки що нічого немає.</p>
+            <p style="margin-top:10px;">
+                <a th:href="@{/}" class="btn">Перейти до каталогу</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="tab-viewings" class="tab-content" style="display:none;">
+        <table class="data-table" th:if="${!viewings.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Об'єкт</th>
+                    <th>Дата перегляду</th>
+                    <th>Коментар</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="v : ${viewings}">
+                    <td>
+                        <a th:href="@{/object/{id}(id=${v.realEstate.objectId})}"
+                           th:text="${v.realEstate.type.name} + ', ' + ${v.realEstate.street} + ', ' + ${v.realEstate.houseNumber}"></a><br>
+                        <small style="color:var(--color-text-light);"
+                               th:text="${v.realEstate.district.name} + ' р-н · ' + ${@priceFormatter.format(v.realEstate.price)}"></small>
+                    </td>
+                    <td th:text="${#temporals.format(v.viewingDate, 'dd.MM.yyyy HH:mm')}"></td>
+                    <td th:text="${v.comment} ?: '—'"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${v.requestStatus == 'нова'} ? 'badge-new' : (${v.requestStatus == 'підтверджена'} ? 'badge-confirmed' : (${v.requestStatus == 'проведена'} ? 'badge-done' : 'badge-cancel'))"
+                              th:text="${v.requestStatus}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="empty-state" th:if="${viewings.isEmpty()}">
+            <p>Заявок на перегляд ще немає.</p>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.querySelectorAll('.tab').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).style.display = 'block';
+        };
+    });
+</script>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${mode == 'register'} ? 'Реєстрація — Метраж' : 'Вхід — Метраж'">Вхід — Метраж</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <div class="auth-page">
+        <h1 th:text="${mode == 'register'} ? 'Реєстрація' : 'Вхід'"></h1>
+
+        <form method="post" th:action="${mode == 'register'} ? @{/register} : @{/login}">
+            <th:block th:if="${mode == 'register'}">
+                <div class="field">
+                    <label>ПІБ</label>
+                    <input type="text" name="full_name" required>
+                </div>
+                <div class="field">
+                    <label>Телефон</label>
+                    <input type="tel" name="phone" placeholder="+380...">
+                </div>
+            </th:block>
+
+            <div class="field">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="field">
+                <label>Пароль</label>
+                <input type="password" name="password" required
+                       th:attr="minlength=${mode == 'register'} ? 6 : null">
+            </div>
+
+            <button type="submit" class="btn"
+                    th:text="${mode == 'register'} ? 'Зареєструватись' : 'Увійти'"></button>
+        </form>
+
+        <div class="auth-switch">
+            <th:block th:if="${mode == 'register'}">
+                Вже є акаунт? <a th:href="@{/login}">Увійти</a>
+            </th:block>
+            <th:block th:unless="${mode == 'register'}">
+                Ще не маєте акаунту? <a th:href="@{/register}">Зареєструватись</a>
+                <br><br>
+                <small>Адмін? <a th:href="@{/admin/login}">Увійти в адмін-панель</a></small>
+            </th:block>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вхід в адмінку — Метраж</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <div class="auth-page">
+        <h1>Вхід в адмін-панель</h1>
+
+        <form method="post" th:action="@{/admin/login}">
+            <div class="field">
+                <label>Логін</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="field">
+                <label>Пароль</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Увійти</button>
+        </form>
+
+        <div class="auth-switch">
+            <a th:href="@{/}">← Повернутись на сайт</a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>

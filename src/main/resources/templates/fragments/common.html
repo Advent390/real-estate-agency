@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Шапка сайту. headerClass='admin-header' для сторінок адмінки (як block header_class в base.html) -->
+<div th:fragment="header(headerClass)">
+    <header th:class="'header ' + ${headerClass}">
+        <div class="header-inner">
+            <a th:href="@{/}" class="logo">Метраж<span>.</span></a>
+            <nav class="nav">
+                <a th:href="@{/}">Каталог</a>
+                <a th:href="@{/(status_id=1)}">Продаж</a>
+                <a th:href="@{/(status_id=2)}">Оренда</a>
+                <th:block th:if="${isClientLogged}">
+                    <a th:href="@{/cabinet}">Кабінет</a>
+                    <a th:href="@{/logout}">Вийти</a>
+                </th:block>
+                <a th:unless="${isClientLogged}" th:href="@{/login}">Увійти</a>
+                <a th:if="${isAdminLogged}" th:href="@{/admin}">Адмін-панель</a>
+            </nav>
+        </div>
+    </header>
+</div>
+
+<!-- Flash-повідомлення. Аналог get_flashed_messages(with_categories=true) -->
+<div th:fragment="flashes">
+    <div th:each="msg : ${flashMessages}"
+         th:class="'flash flash-' + ${msg.category}"
+         th:text="${msg.text}"></div>
+</div>
+
+<!-- Підвал сайту -->
+<div th:fragment="footer">
+    <footer class="footer">
+        <div>© <span th:text="${currentYear}">2026</span> Метраж — Агенція нерухомості в Миколаєві</div>
+        <div style="margin-top:6px;">м. Миколаїв · +38 (068) 000-00-00 · info@metrazh.ua</div>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адмін-панель — Метраж</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='admin-header')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <h1 class="section-title" style="margin:0;">Адмін-панель</h1>
+        <div>
+            <a th:href="@{/admin/viewings}" class="btn btn-outline">Заявки</a>
+            <a th:href="@{/admin/clients}" class="btn btn-outline">Клієнти</a>
+            <a th:href="@{/admin/reports}" class="btn btn-outline">Звіти</a>
+            <a th:href="@{/admin/object/new}" class="btn">+ Додати об'єкт</a>
+            <a th:href="@{/admin/logout}" class="btn btn-outline">Вийти</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="number" th:text="${stats.totalObjects}"></div>
+            <div class="label">Всього об'єктів</div>
+        </div>
+        <div class="stat-box">
+            <div class="number" th:text="${stats.activeObjects}"></div>
+            <div class="label">Активних</div>
+        </div>
+        <div class="stat-box">
+            <div class="number" th:text="${stats.archivedObjects}"></div>
+            <div class="label">В архіві</div>
+        </div>
+        <div class="stat-box">
+            <div class="number" th:text="${stats.totalClients}"></div>
+            <div class="label">Клієнтів</div>
+        </div>
+        <div class="stat-box">
+            <div class="number" th:text="${stats.pendingViewings}"></div>
+            <div class="label">Нових заявок</div>
+        </div>
+    </div>
+
+    <form method="get" class="filters">
+        <div class="filters-grid">
+            <div class="field">
+                <label>Тип</label>
+                <select name="type_id">
+                    <option value="">Усі</option>
+                    <option th:each="t : ${types}" th:value="${t.typeId}"
+                            th:selected="${filters.typeId == t.typeId}" th:text="${t.name}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Район</label>
+                <select name="district_id">
+                    <option value="">Усі</option>
+                    <option th:each="d : ${districts}" th:value="${d.districtId}"
+                            th:selected="${filters.districtId == d.districtId}" th:text="${d.name}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Статус</label>
+                <select name="status_id">
+                    <option value="">Усі</option>
+                    <option th:each="s : ${statuses}" th:value="${s.statusId}"
+                            th:selected="${filters.statusId == s.statusId}" th:text="${s.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-buttons">
+            <button type="submit" class="btn">Фільтрувати</button>
+            <a th:href="@{/admin}" class="btn btn-outline">Скинути</a>
+        </div>
+    </form>
+
+    <div class="objects-count">Об'єктів: <strong th:text="${objects.size()}"></strong></div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Тип</th>
+                <th>Адреса</th>
+                <th>Площа</th>
+                <th>Ціна</th>
+                <th>Статус</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="o : ${objects}">
+                <td>#<span th:text="${o.objectId}"></span></td>
+                <td th:text="${o.type.name}"></td>
+                <td>
+                    <a th:href="@{/object/{id}(id=${o.objectId})}">
+                        <span th:text="${o.street} + ', ' + ${o.houseNumber}"></span>
+                        <th:block th:if="${o.apartmentNumber != null}">, кв.<span th:text="${o.apartmentNumber}"></span></th:block>
+                    </a><br>
+                    <small style="color:var(--color-text-light);" th:text="${o.district.name} + ' р-н'"></small>
+                </td>
+                <td th:text="${o.totalArea} + ' м²'"></td>
+                <td th:text="${@priceFormatter.format(o.price)}"></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${o.status.statusId == 1} ? 'badge-new' : (${o.status.statusId == 2} ? 'badge-confirmed' : 'badge-archive')"
+                          th:text="${o.status.name}"></span>
+                </td>
+                <td class="admin-actions">
+                    <a th:href="@{/admin/object/{id}/edit(id=${o.objectId})}"
+                       class="btn btn-outline btn-sm">Ред.</a>
+
+                    <form method="post" th:action="@{/admin/object/{id}/status(id=${o.objectId})}" style="display:inline;">
+                        <select name="status_id" onchange="this.form.submit()" style="padding:5px;font-size:12px;">
+                            <option th:each="s : ${statuses}" th:value="${s.statusId}"
+                                    th:selected="${s.statusId == o.status.statusId}" th:text="${s.name}"></option>
+                        </select>
+                    </form>
+
+                    <form method="post" th:action="@{/admin/object/{id}/delete(id=${o.objectId})}"
+                          style="display:inline;"
+                          th:attr="onsubmit=|return confirm('Видалити обʼєкт #${o.objectId}?');|">
+                        <button type="submit" class="btn btn-danger btn-sm">×</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>

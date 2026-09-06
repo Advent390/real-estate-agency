@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${obj.type.name} + ' — ' + ${obj.street}">Об'єкт — Метраж</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <div style="margin-bottom:15px;">
+        <a th:href="@{/}" class="btn btn-outline btn-sm">← До каталогу</a>
+    </div>
+
+    <div class="object-page">
+        <div>
+            <div class="object-photo"
+                 th:style="'background-image:url(' + (${obj.mainPhoto} ?: '/img/placeholder.jpg') + ');'"></div>
+            <div class="object-photos-thumbs" th:if="${!photos.isEmpty()}">
+                <div th:each="p : ${photos}"
+                     th:style="'background-image:url(' + ${p.photoPath} + ');'"></div>
+            </div>
+        </div>
+
+        <div class="object-info">
+            <h1>
+                <span th:text="${obj.type.name}"></span>,
+                <span th:text="${obj.street}"></span>,
+                <span th:text="${obj.houseNumber}"></span>
+                <th:block th:if="${obj.apartmentNumber != null}">, кв. <span th:text="${obj.apartmentNumber}"></span></th:block>
+            </h1>
+            <div style="color:var(--color-text-light);">
+                <span th:text="${obj.district.name}"></span> район, м. Миколаїв
+            </div>
+
+            <div class="price" th:text="${@priceFormatter.format(obj.price)}"></div>
+
+            <div class="object-specs">
+                <div class="spec-row"><strong>Тип</strong><span th:text="${obj.type.name}"></span></div>
+                <div class="spec-row"><strong>Площа</strong><span th:text="${obj.totalArea} + ' м²'"></span></div>
+                <div class="spec-row"><strong>Статус</strong><span th:text="${obj.status.name}"></span></div>
+
+                <th:block th:if="${obj.apartment != null}">
+                    <div class="spec-row"><strong>Кімнат</strong><span th:text="${obj.apartment.rooms}"></span></div>
+                    <div class="spec-row"><strong>Поверх</strong>
+                        <span th:text="${obj.apartment.floor} + ' з ' + ${obj.apartment.totalFloors}"></span></div>
+                </th:block>
+                <th:block th:if="${obj.house != null}">
+                    <div class="spec-row"><strong>Кімнат</strong><span th:text="${obj.house.rooms}"></span></div>
+                    <div class="spec-row"><strong>Поверховість</strong><span th:text="${obj.house.totalFloors}"></span></div>
+                    <div class="spec-row"><strong>Ділянка</strong><span th:text="${obj.house.plotArea} + ' соток'"></span></div>
+                </th:block>
+                <th:block th:if="${obj.office != null}">
+                    <div class="spec-row"><strong>Приміщень</strong><span th:text="${obj.office.roomsCount}"></span></div>
+                    <div class="spec-row"><strong>Поверх</strong>
+                        <span th:text="${obj.office.floor} + ' з ' + ${obj.office.totalFloors}"></span></div>
+                    <div class="spec-row"><strong>Призначення</strong><span th:text="${obj.office.purpose}"></span></div>
+                </th:block>
+            </div>
+
+            <div class="object-description" th:if="${obj.description != null and !obj.description.isEmpty()}">
+                <h3>Опис</h3>
+                <p th:text="${obj.description}"></p>
+            </div>
+
+            <div class="object-actions">
+                <form th:if="${isClientLogged}" method="post"
+                      th:action="@{/object/{id}/favorite(id=${obj.objectId})}"
+                      style="display:inline;">
+                    <button type="submit" class="btn btn-outline">
+                        <span th:text="${inFavorites} ? '★ В обраному' : '☆ В обране'"></span>
+                    </button>
+                </form>
+                <a th:unless="${isClientLogged}" th:href="@{/login}" class="btn btn-outline">
+                    Увійти для додавання в обране
+                </a>
+            </div>
+
+            <div class="viewing-form" th:if="${isClientLogged and (obj.status.statusId == 1 or obj.status.statusId == 2)}">
+                <h3>Записатись на перегляд</h3>
+                <form method="post" th:action="@{/object/{id}/viewing(id=${obj.objectId})}">
+                    <div class="field">
+                        <label>Бажана дата та час</label>
+                        <input type="datetime-local" name="viewing_date" required>
+                    </div>
+                    <div class="field">
+                        <label>Коментар (необов'язково)</label>
+                        <textarea name="comment" rows="3"
+                                  placeholder="Зауваження, побажання..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">Залишити заявку</button>
+                </form>
+            </div>
+            <div class="viewing-form" th:if="${!isClientLogged and (obj.status.statusId == 1 or obj.status.statusId == 2)}">
+                <h3>Хочете записатись на перегляд?</h3>
+                <p style="margin-bottom:12px;color:var(--color-text-light);">
+                    <a th:href="@{/login}">Увійдіть</a> або
+                    <a th:href="@{/register}">зареєструйтесь</a>,
+                    щоб залишити заявку.
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>

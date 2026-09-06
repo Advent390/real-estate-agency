@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${obj != null} ? ('Редагування об’єкта #' + ${obj.objectId} + ' — Адмін') : 'Новий об’єкт — Адмін'">Адмін</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='admin-header')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <div style="margin-bottom:15px;">
+        <a th:href="@{/admin}" class="btn btn-outline btn-sm">← До списку</a>
+    </div>
+
+    <h1 class="section-title" th:text="${obj != null} ? ('Редагування об’єкта #' + ${obj.objectId}) : 'Новий об’єкт'"></h1>
+
+    <form method="post" id="objForm">
+        <div class="form-section">
+            <h3>Основні дані</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Тип об'єкта *</label>
+                    <select name="type_id" id="typeSelect" required>
+                        <option th:each="t : ${types}" th:value="${t.typeId}"
+                                th:selected="${obj != null and obj.type.typeId == t.typeId}"
+                                th:text="${t.name}"></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Статус *</label>
+                    <select name="status_id" required>
+                        <option th:each="s : ${statuses}" th:value="${s.statusId}"
+                                th:selected="${obj != null and obj.status.statusId == s.statusId}"
+                                th:text="${s.name}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Адреса</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Район *</label>
+                    <select name="district_id" required>
+                        <option th:each="d : ${districts}" th:value="${d.districtId}"
+                                th:selected="${obj != null and obj.district.districtId == d.districtId}"
+                                th:text="${d.name}"></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Вулиця *</label>
+                    <input type="text" name="street" required th:value="${obj != null} ? ${obj.street} : ''">
+                </div>
+                <div class="field">
+                    <label>№ будинку *</label>
+                    <input type="text" name="house_number" required th:value="${obj != null} ? ${obj.houseNumber} : ''">
+                </div>
+                <div class="field">
+                    <label>№ квартири/приміщення</label>
+                    <input type="text" name="apartment_number" th:value="${obj != null} ? ${obj.apartmentNumber} : ''">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Параметри та ціна</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Загальна площа (м²) *</label>
+                    <input type="number" step="0.01" name="total_area" required
+                           th:value="${obj != null} ? ${obj.totalArea} : ''">
+                </div>
+                <div class="field">
+                    <label>Ціна (грн) *</label>
+                    <input type="number" step="1" name="price" required
+                           th:value="${obj != null} ? ${obj.price} : ''">
+                </div>
+            </div>
+        </div>
+
+        <!-- Поля специфічні для квартири -->
+        <div class="form-section type-fields" data-type="1">
+            <h3>Дані квартири</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Кількість кімнат</label>
+                    <input type="number" name="rooms" min="1"
+                           th:value="${obj != null and obj.apartment != null} ? ${obj.apartment.rooms} : ''">
+                </div>
+                <div class="field">
+                    <label>Поверх</label>
+                    <input type="number" name="floor" min="1"
+                           th:value="${obj != null and obj.apartment != null} ? ${obj.apartment.floor} : ''">
+                </div>
+                <div class="field">
+                    <label>Поверхів у будинку</label>
+                    <input type="number" name="total_floors" min="1"
+                           th:value="${obj != null and obj.apartment != null} ? ${obj.apartment.totalFloors} : ''">
+                </div>
+            </div>
+        </div>
+
+        <!-- Поля специфічні для будинку -->
+        <div class="form-section type-fields" data-type="2">
+            <h3>Дані будинку</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Кількість кімнат</label>
+                    <input type="number" name="rooms" min="1"
+                           th:value="${obj != null and obj.house != null} ? ${obj.house.rooms} : ''">
+                </div>
+                <div class="field">
+                    <label>Поверховість</label>
+                    <input type="number" name="total_floors" min="1"
+                           th:value="${obj != null and obj.house != null} ? ${obj.house.totalFloors} : ''">
+                </div>
+                <div class="field">
+                    <label>Площа ділянки (соток)</label>
+                    <input type="number" step="0.01" name="plot_area" min="0"
+                           th:value="${obj != null and obj.house != null} ? ${obj.house.plotArea} : ''">
+                </div>
+            </div>
+        </div>
+
+        <!-- Поля специфічні для офісу -->
+        <div class="form-section type-fields" data-type="3">
+            <h3>Дані офісу</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Кількість приміщень</label>
+                    <input type="number" name="rooms_count" min="1"
+                           th:value="${obj != null and obj.office != null} ? ${obj.office.roomsCount} : ''">
+                </div>
+                <div class="field">
+                    <label>Поверх</label>
+                    <input type="number" name="floor" min="1"
+                           th:value="${obj != null and obj.office != null} ? ${obj.office.floor} : ''">
+                </div>
+                <div class="field">
+                    <label>Поверхів у будинку</label>
+                    <input type="number" name="total_floors" min="1"
+                           th:value="${obj != null and obj.office != null} ? ${obj.office.totalFloors} : ''">
+                </div>
+                <div class="field">
+                    <label>Призначення</label>
+                    <select name="purpose"
+                            th:with="purp=${obj != null and obj.office != null} ? ${obj.office.purpose} : ''">
+                        <option value="офіс" th:selected="${purp == 'офіс'}">офіс</option>
+                        <option value="магазин" th:selected="${purp == 'магазин'}">магазин</option>
+                        <option value="склад" th:selected="${purp == 'склад'}">склад</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Опис та фото</h3>
+            <div class="field" style="margin-bottom:15px;">
+                <label>Шлях до головного фото</label>
+                <input type="text" name="main_photo" placeholder="/img/apt1.jpg"
+                       th:value="${obj != null} ? ${obj.mainPhoto} : ''">
+            </div>
+            <div class="field">
+                <label>Опис</label>
+                <textarea name="description" rows="5" th:text="${obj != null} ? ${obj.description} : ''"></textarea>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+            <button type="submit" class="btn" th:text="${obj != null} ? 'Зберегти зміни' : 'Створити об’єкт'"></button>
+            <a th:href="@{/admin}" class="btn btn-outline">Скасувати</a>
+        </div>
+    </form>
+
+    <script>
+        // Показуємо тільки поля для обраного типу
+        function syncTypeFields() {
+            const typeId = document.getElementById('typeSelect').value;
+            document.querySelectorAll('.type-fields').forEach(section => {
+                const show = section.dataset.type === typeId;
+                section.style.display = show ? 'block' : 'none';
+                section.querySelectorAll('input, select').forEach(el => {
+                    el.disabled = !show;
+                });
+            });
+        }
+        document.getElementById('typeSelect').addEventListener('change', syncTypeFields);
+        syncTypeFields();
+    </script>
+</main>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детальні Звіти — Адмін</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/common :: header(headerClass='admin-header')}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/common :: flashes}"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:10px;">
+        <h1 class="section-title" style="margin:0;">📊 Звіти та аналітика</h1>
+        <a th:href="@{/admin}" class="btn btn-outline">← До панелі</a>
+    </div>
+
+    <div class="admin-report-section" style="margin-bottom: 40px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h2 style="margin-bottom: 15px; color: var(--color-text); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <span>🏠 Звіт з продажу нерухомості</span>
+            <span class="badge badge-confirmed" style="font-size: 16px; padding: 6px 12px;">
+                Всього продано: <span th:text="${totalSold}"></span>
+            </span>
+        </h2>
+
+        <form method="GET" style="display:flex; gap:15px; margin-bottom: 25px; align-items:flex-end; flex-wrap: wrap; background: #f9fafb; padding: 15px; border-radius: 6px;">
+            <input type="hidden" name="view_start" th:value="${viewStart}">
+            <input type="hidden" name="view_end" th:value="${viewEnd}">
+
+            <div class="field" style="margin:0; min-width: 150px;">
+                <label style="font-size: 13px;">З дати:</label>
+                <input type="date" name="sold_start" th:value="${soldStart}">
+            </div>
+            <div class="field" style="margin:0; min-width: 150px;">
+                <label style="font-size: 13px;">По дату:</label>
+                <input type="date" name="sold_end" th:value="${soldEnd}">
+            </div>
+            <div style="margin:0;">
+                <button type="submit" class="btn btn-outline" style="padding: 9px 15px;">Сформувати</button>
+                <a th:if="${soldStart != null or soldEnd != null}"
+                   th:href="@{/admin/reports(view_start=${viewStart}, view_end=${viewEnd})}"
+                   style="margin-left: 10px; font-size: 14px; color: #d32f2f;">Скинути</a>
+            </div>
+        </form>
+
+        <th:block th:if="${!soldByType.isEmpty()}">
+            <th:block th:each="entry : ${soldByType}">
+                <h3 style="margin-top: 25px; border-bottom: 2px solid #e0e0e0; padding-bottom: 5px;">
+                    Категорія: <span th:text="${entry.key}"></span>
+                    <span style="color: #1976d2; font-size: 16px;">(Кількість: <span th:text="${entry.value.size()}"></span>)</span>
+                </h3>
+                <table class="data-table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Адреса (Район)</th>
+                            <th>Характеристики</th>
+                            <th>Площа</th>
+                            <th>Ціна (Остаточна)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="o : ${entry.value}">
+                            <td>#<span th:text="${o.objectId}"></span></td>
+                            <td>
+                                <strong>
+                                    Вул. <span th:text="${o.street}"></span>, <span th:text="${o.houseNumber}"></span>
+                                    <th:block th:if="${o.apartmentNumber != null}">, кв. <span th:text="${o.apartmentNumber}"></span></th:block>
+                                </strong><br>
+                                <small style="color:var(--color-text-light);" th:text="${o.district.name} + ' р-н'"></small>
+                            </td>
+                            <td>
+                                <small>
+                                    <th:block th:if="${o.apartment != null}">
+                                        <span th:text="${o.apartment.rooms}"></span> кімн., Поверх:
+                                        <span th:text="${o.apartment.floor} + '/' + ${o.apartment.totalFloors}"></span>
+                                    </th:block>
+                                    <th:block th:if="${o.house != null}">
+                                        <span th:text="${o.house.rooms}"></span> кімн., Поверхів:
+                                        <span th:text="${o.house.totalFloors}"></span>, Ділянка:
+                                        <span th:text="${o.house.plotArea}"></span> сот.
+                                    </th:block>
+                                    <th:block th:if="${o.office != null}">
+                                        <span th:text="${o.office.roomsCount}"></span> прим., Поверх:
+                                        <span th:text="${o.office.floor} + '/' + ${o.office.totalFloors}"></span><br>
+                                        Призначення: <span th:text="${o.office.purpose}"></span>
+                                    </th:block>
+                                </small>
+                            </td>
+                            <td><strong th:text="${o.totalArea} + ' м²'"></strong></td>
+                            <td style="color: #2e7d32; font-weight: bold;" th:text="${@priceFormatter.format(o.price)}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th:block>
+        </th:block>
+        <div class="empty-state" th:if="${soldByType.isEmpty()}">
+            <p>За вказаний період об'єктів не знайдено.</p>
+        </div>
+    </div>
+
+
+    <div class="admin-report-section" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h2 style="margin-bottom: 15px; color: var(--color-text);">⏱️ Активність клієнтів (Заявки на перегляд)</h2>
+
+        <form method="GET" style="display:flex; gap:15px; margin-bottom: 25px; align-items:flex-end; flex-wrap: wrap; background: #f9fafb; padding: 15px; border-radius: 6px;">
+            <input type="hidden" name="sold_start" th:value="${soldStart}">
+            <input type="hidden" name="sold_end" th:value="${soldEnd}">
+
+            <div class="field" style="margin:0; min-width: 150px;">
+                <label style="font-size: 13px;">З дати:</label>
+                <input type="date" name="view_start" th:value="${viewStart}">
+            </div>
+            <div class="field" style="margin:0; min-width: 150px;">
+                <label style="font-size: 13px;">По дату:</label>
+                <input type="date" name="view_end" th:value="${viewEnd}">
+            </div>
+            <div style="margin:0;">
+                <button type="submit" class="btn btn-outline" style="padding: 9px 15px;">Сформувати</button>
+                <a th:if="${viewStart != null or viewEnd != null}"
+                   th:href="@{/admin/reports(sold_start=${soldStart}, sold_end=${soldEnd})}"
+                   style="margin-left: 10px; font-size: 14px; color: #d32f2f;">Скинути</a>
+            </div>
+        </form>
+
+        <table class="data-table" th:if="${!recentViewings.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Клієнт</th>
+                    <th>Об'єкт нерухомості</th>
+                    <th>Дата та час перегляду</th>
+                    <th>Статус заявки</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="v : ${recentViewings}">
+                    <td>
+                        <strong th:text="${v.client.fullName}"></strong><br>
+                        <small style="color:var(--color-text-light);">
+                            <span th:text="${v.client.phone} ?: '—'"></span><br>
+                            <span th:text="${v.client.email}"></span>
+                        </small>
+                    </td>
+                    <td>
+                        <a th:href="@{/object/{id}(id=${v.realEstate.objectId})}" target="_blank" style="font-weight: 500;">
+                            <span th:text="${v.realEstate.type.name}"></span>, вул. <span th:text="${v.realEstate.street}"></span>,
+                            <span th:text="${v.realEstate.houseNumber}"></span>
+                            <th:block th:if="${v.realEstate.apartmentNumber != null}">, кв. <span th:text="${v.realEstate.apartmentNumber}"></span></th:block>
+                        </a>
+                    </td>
+                    <td th:text="${#temporals.format(v.viewingDate, 'dd.MM.yyyy HH:mm')}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${v.requestStatus == 'нова'} ? 'badge-new' : (${v.requestStatus == 'підтверджена'} ? 'badge-confirmed' : (${v.requestStatus == 'проведена'} ? 'badge-done' : 'badge-cancel'))"
+                              th:text="${v.requestStatus}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="empty-state" th:if="${recentViewings.isEmpty()}">
+            <p>За вказаний період не зафіксовано жодної заявки на перегляд.</p>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>
