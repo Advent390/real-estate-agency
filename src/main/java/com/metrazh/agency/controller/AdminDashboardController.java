@@ -2,6 +2,7 @@ package com.metrazh.agency.controller;
 
 import com.metrazh.agency.dto.SearchFilters;
 import com.metrazh.agency.service.RealEstateService;
+import com.metrazh.agency.web.ViewNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,6 @@ public class AdminDashboardController {
         model.addAttribute("statuses", realEstateService.getStatuses());
         model.addAttribute("stats", realEstateService.getStats());
         model.addAttribute("filters", filters);
-        return "admin/dashboard";
+        return ViewNames.ADMIN_DASHBOARD;
     }
 }

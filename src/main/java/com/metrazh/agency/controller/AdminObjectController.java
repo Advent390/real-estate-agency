@@ -4,6 +4,7 @@ import com.metrazh.agency.dto.RealEstateFormData;
 import com.metrazh.agency.entity.RealEstate;
 import com.metrazh.agency.service.RealEstateService;
 import com.metrazh.agency.util.FlashService;
+import com.metrazh.agency.web.ViewNames;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,7 @@ public class AdminObjectController {
     @GetMapping("/new")
     public String newForm(Model model) {
         addReferenceData(model, null);
-        return "admin/form";
+        return ViewNames.ADMIN_FORM;
     }
 
     @PostMapping("/new")
@@ -45,11 +46,11 @@ public class AdminObjectController {
             RealEstateFormData data = parseForm(request);
             RealEstate saved = realEstateService.create(data);
             flashService.flash(request, "success", "Об'єкт #" + saved.getObjectId() + " створено");
-            return "redirect:/admin";
+            return ViewNames.REDIRECT_ADMIN;
         } catch (Exception e) {
             flashService.flash(request, "danger", "Помилка: " + HtmlUtils.htmlEscape(e.getMessage()));
             addReferenceData(model, null);
-            return "admin/form";
+            return ViewNames.ADMIN_FORM;
         }
     }
 
@@ -62,7 +63,7 @@ public class AdminObjectController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         addReferenceData(model, obj);
-        return "admin/form";
+        return ViewNames.ADMIN_FORM;
     }
 
     @PostMapping("/{objectId}/edit")
@@ -71,7 +72,7 @@ public class AdminObjectController {
             RealEstateFormData data = parseForm(request);
             realEstateService.update(objectId, data);
             flashService.flash(request, "success", "Об'єкт #" + objectId + " оновлено");
-            return "redirect:/admin";
+            return ViewNames.REDIRECT_ADMIN;
         } catch (Exception e) {
             flashService.flash(request, "danger", "Помилка: " + HtmlUtils.htmlEscape(e.getMessage()));
             try {
@@ -79,7 +80,7 @@ public class AdminObjectController {
             } catch (EntityNotFoundException ignored) {
                 addReferenceData(model, null);
             }
-            return "admin/form";
+            return ViewNames.ADMIN_FORM;
         }
     }
 
@@ -87,7 +88,7 @@ public class AdminObjectController {
     public String delete(@PathVariable Integer objectId, HttpServletRequest request) {
         realEstateService.delete(objectId);
         flashService.flash(request, "info", "Об'єкт #" + objectId + " видалено");
-        return "redirect:/admin";
+        return ViewNames.REDIRECT_ADMIN;
     }
 
     @PostMapping("/{objectId}/status")
@@ -97,7 +98,7 @@ public class AdminObjectController {
         realEstateService.updateStatus(objectId, statusId);
         flashService.flash(request, "success", "Статус оновлено");
         String referer = request.getHeader("Referer");
-        return "redirect:" + (referer != null ? referer : "/admin");
+        return ViewNames.redirectToRefererOr(referer, "/admin");
     }
 
     private void addReferenceData(Model model, RealEstate obj) {

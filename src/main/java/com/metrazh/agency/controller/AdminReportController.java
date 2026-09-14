@@ -1,6 +1,7 @@
 package com.metrazh.agency.controller;
 
 import com.metrazh.agency.service.ReportService;
+import com.metrazh.agency.web.ViewNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class AdminReportController {
         model.addAttribute("soldEnd", soldEnd);
         model.addAttribute("viewStart", viewStart);
         model.addAttribute("viewEnd", viewEnd);
-        return "admin/reports";
+        return ViewNames.ADMIN_REPORTS;
     }
 
     private LocalDate parseOrNull(String raw) {

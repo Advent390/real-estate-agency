@@ -4,6 +4,7 @@ import com.metrazh.agency.entity.AdminUser;
 import com.metrazh.agency.service.AuthService;
 import com.metrazh.agency.util.FlashService;
 import com.metrazh.agency.util.SessionKeys;
+import com.metrazh.agency.web.ViewNames;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class AdminAuthController {
 
     @GetMapping("/admin/login")
     public String loginForm() {
-        return "admin/login";
+        return ViewNames.ADMIN_LOGIN;
     }
 
     @PostMapping("/admin/login")
@@ -41,11 +42,11 @@ public class AdminAuthController {
             session.setAttribute(SessionKeys.ADMIN_ID, user.get().getUserId());
             session.setAttribute(SessionKeys.ADMIN_NAME, user.get().getFullName());
             flashService.flash(request, "success", "Вітаємо, " + user.get().getFullName() + "!");
-            return "redirect:/admin";
+            return ViewNames.REDIRECT_ADMIN;
         }
 
         flashService.flash(request, "danger", "Невірні дані");
-        return "admin/login";
+        return ViewNames.ADMIN_LOGIN;
     }
 
     @GetMapping("/admin/logout")
@@ -55,6 +56,6 @@ public class AdminAuthController {
             session.removeAttribute(SessionKeys.ADMIN_ID);
             session.removeAttribute(SessionKeys.ADMIN_NAME);
         }
-        return "redirect:/admin/login";
+        return ViewNames.REDIRECT_ADMIN_LOGIN;
     }
 }

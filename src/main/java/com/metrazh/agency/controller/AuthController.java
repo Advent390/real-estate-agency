@@ -4,6 +4,7 @@ import com.metrazh.agency.entity.Client;
 import com.metrazh.agency.service.AuthService;
 import com.metrazh.agency.util.FlashService;
 import com.metrazh.agency.util.SessionKeys;
+import com.metrazh.agency.web.ViewNames;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,7 @@ public class AuthController {
     @GetMapping("/register")
     public String registerForm(Model model) {
         model.addAttribute("mode", "register");
-        return "login";
+        return ViewNames.LOGIN;
     }
 
     @PostMapping("/register")
@@ -50,18 +51,18 @@ public class AuthController {
             session.setAttribute(SessionKeys.CLIENT_ID, result.client().getClientId());
             session.setAttribute(SessionKeys.CLIENT_NAME, result.client().getFullName());
             flashService.flash(request, "success", "Реєстрація успішна!");
-            return "redirect:/cabinet";
+            return ViewNames.REDIRECT_CABINET;
         }
 
         flashService.flash(request, "danger", result.errorMessage());
         model.addAttribute("mode", "register");
-        return "login";
+        return ViewNames.LOGIN;
     }
 
     @GetMapping("/login")
     public String loginForm(Model model) {
         model.addAttribute("mode", "login");
-        return "login";
+        return ViewNames.LOGIN;
     }
 
     @PostMapping("/login")
@@ -76,12 +77,12 @@ public class AuthController {
             session.setAttribute(SessionKeys.CLIENT_ID, client.get().getClientId());
             session.setAttribute(SessionKeys.CLIENT_NAME, client.get().getFullName());
             flashService.flash(request, "success", "Вітаємо, " + client.get().getFullName() + "!");
-            return "redirect:/cabinet";
+            return ViewNames.REDIRECT_CABINET;
         }
 
         flashService.flash(request, "danger", "Невірний email або пароль");
         model.addAttribute("mode", "login");
-        return "login";
+        return ViewNames.LOGIN;
     }
 
     @GetMapping("/logout")
@@ -92,6 +93,6 @@ public class AuthController {
             session.removeAttribute(SessionKeys.CLIENT_NAME);
         }
         flashService.flash(request, "info", "Ви вийшли з акаунта");
-        return "redirect:/";
+        return ViewNames.REDIRECT_HOME;
     }
 }

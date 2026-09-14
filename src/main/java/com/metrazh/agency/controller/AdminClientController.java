@@ -1,6 +1,7 @@
 package com.metrazh.agency.controller;
 
 import com.metrazh.agency.repository.ClientRepository;
+import com.metrazh.agency.web.ViewNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,6 @@ public class AdminClientController {
     @GetMapping("/admin/clients")
     public String list(Model model) {
         model.addAttribute("clients", clientRepository.findAllByOrderByCreatedAtDesc());
-        return "admin/clients";
+        return ViewNames.ADMIN_CLIENTS;
     }
 }

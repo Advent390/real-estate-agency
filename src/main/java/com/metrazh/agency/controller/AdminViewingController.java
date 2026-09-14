@@ -2,6 +2,7 @@ package com.metrazh.agency.controller;
 
 import com.metrazh.agency.service.ViewingService;
 import com.metrazh.agency.util.FlashService;
+import com.metrazh.agency.web.ViewNames;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,7 @@ public class AdminViewingController {
     @GetMapping("/admin/viewings")
     public String list(Model model) {
         model.addAttribute("viewings", viewingService.getAllViewings());
-        return "admin/viewings";
+        return ViewNames.ADMIN_VIEWINGS;
     }
 
     @PostMapping("/admin/viewings/{viewingId}/status")
@@ -34,6 +35,6 @@ public class AdminViewingController {
                                 HttpServletRequest request) {
         viewingService.updateStatus(viewingId, requestStatus);
         flashService.flash(request, "success", "Статус заявки оновлено");
-        return "redirect:/admin/viewings";
+        return ViewNames.REDIRECT_ADMIN_VIEWINGS;
     }
 }

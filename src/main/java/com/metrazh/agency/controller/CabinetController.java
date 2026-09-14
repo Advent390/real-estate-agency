@@ -4,6 +4,7 @@ import com.metrazh.agency.service.FavoriteService;
 import com.metrazh.agency.service.ViewingService;
 import com.metrazh.agency.util.FlashService;
 import com.metrazh.agency.util.SessionKeys;
+import com.metrazh.agency.web.ViewNames;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +44,7 @@ public class CabinetController {
         model.addAttribute("viewings", viewingService.getClientViewings(clientId));
         model.addAttribute("favorites", favoriteService.getClientFavorites(clientId)
                 .stream().map(f -> f.getRealEstate()).toList());
-        return "cabinet";
+        return ViewNames.CABINET;
     }
 
     /** Створення заявки на перегляд. Аналог request_viewing(). */
@@ -57,13 +58,13 @@ public class CabinetController {
             viewingDate = LocalDateTime.parse(viewingDateRaw, VIEWING_DATE_FORMAT);
         } catch (DateTimeParseException e) {
             flashService.flash(request, "danger", "Невірний формат дати");
-            return "redirect:/object/" + objectId;
+            return ViewNames.redirectToObject(objectId);
         }
 
         Integer clientId = (Integer) request.getSession(true).getAttribute(SessionKeys.CLIENT_ID);
         viewingService.createViewing(clientId, objectId, viewingDate, comment.strip());
         flashService.flash(request, "success", "Заявка на перегляд створена. Очікуйте підтвердження.");
-        return "redirect:/cabinet";
+        return ViewNames.REDIRECT_CABINET;
     }
 
     /** Додати/прибрати з обраного. Аналог toggle_favorite(). */
@@ -80,6 +81,6 @@ public class CabinetController {
         }
 
         String referer = request.getHeader("Referer");
-        return "redirect:" + (referer != null ? referer : "/object/" + objectId);
+        return ViewNames.redirectToRefererOr(referer, "/object/" + objectId);
     }
 }
