@@ -11,19 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Побудова динамічного WHERE для пошуку/фільтрації нерухомості.
- * Java/JPA-еквівалент функції search_real_estate(filters) з оригінального db.py,
- * де SQL-рядок збирався вручну додаванням "AND ...".
- *
- * ВАЖЛИВО: тут (і в soldBetween нижче) предикати для необов'язкових
- * дат/фільтрів додаються в WHERE, лише якщо значення не null. Такий підхід
- * (замість "CAST(:param AS timestamp) IS NULL OR ...") — навмисний: коли
- * Hibernate 6 біндить у PostgreSQL параметр зі значенням null всередині
- * CAST(...), драйвер іноді не може визначити тип параметра і падає з
- * "cannot cast type bytea to timestamp". Якщо предикат просто не додається
- * в дерево запиту, null ніколи не потрапляє в SQL — і проблема не виникає.
- */
 public final class RealEstateSpecifications {
 
     private RealEstateSpecifications() {
@@ -86,11 +73,8 @@ public final class RealEstateSpecifications {
         };
     }
 
-    /**
-     * Продані об'єкти (status_id = 3) за період створення, згруповані для
-     * reports.html. Аналог get_detailed_sold_objects(start_date, end_date) з db.py.
-     * start/end можуть бути null — тоді відповідна межа періоду просто не застосовується.
-     */
+    /** Продані об'єкти (status_id = 3) за період створення, згруповані для reports.html.
+     start/end можуть бути null — тоді відповідна межа періоду просто не застосовується.*/
     public static Specification<RealEstate> soldBetween(LocalDateTime start, LocalDateTime end) {
         return (root, query, cb) -> {
             // Eager fetch, щоб уникнути LazyInitializationException/N+1 у шаблоні

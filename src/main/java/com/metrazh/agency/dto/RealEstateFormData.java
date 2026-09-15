@@ -6,12 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-/**
- * Дані форми "новий/редагувати об'єкт" з admin/form.html.
- * Аналог dict, який повертала _parse_object_form(form) в app.py.
- * Поля специфіки (rooms, floor, plotArea, purpose, ...) заповнюються
- * тільки для відповідного типу — решта залишаються null і ігноруються.
- */
+/** Дані форми "новий/редагувати об'єкт" з admin/form.html.*/
 public class RealEstateFormData {
 
     @NotNull

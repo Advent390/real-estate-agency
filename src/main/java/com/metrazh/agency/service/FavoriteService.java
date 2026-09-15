@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/** Аналог секції "ОБРАНЕ" з db.py. */
 @Service
 @Transactional(readOnly = true)
 public class FavoriteService {

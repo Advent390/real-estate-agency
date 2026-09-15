@@ -2,7 +2,6 @@ package com.metrazh.agency.entity;
 
 import jakarta.persistence.*;
 
-/** Специфіка для офісів/магазинів/складів. Спільний PK з real_estate. */
 @Entity
 @Table(name = "offices")
 public class Office {

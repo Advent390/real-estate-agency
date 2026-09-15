@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Аналог auth.py: хешування паролів (BCrypt замінює werkzeug.security),
- * реєстрація/логін клієнтів та адмінів.
- */
 @Service
 public class AuthService {
 

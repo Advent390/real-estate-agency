@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-/** Обране: чиста M:N таблиця-зв'язок клієнт↔об'єкт. */
+/** Обране */
 @Entity
 @Table(name = "favorites")
 @IdClass(FavoriteId.class)

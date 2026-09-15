@@ -10,13 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Сторінка деталізованої аналітики. Аналог admin_reports() з app.py.
- * Дати приймаються як String (а не LocalDate напряму), бо форма з
- * незаповненими полями дат надсилає порожній рядок ("sold_start=") —
- * а не відсутній параметр. Якби тип аргументу був LocalDate,
- * Spring намагався б конвертувати "" у дату і падав з помилкою.
- */
 @Controller
 public class AdminReportController {
 

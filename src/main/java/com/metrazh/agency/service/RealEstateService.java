@@ -13,12 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Пошук, читання та CRUD нерухомості.
- * Аналог відповідних секцій db.py ("НЕРУХОМІСТЬ — пошук та фільтрація",
- * "НЕРУХОМІСТЬ — CRUD"), тепер через Spring Data JPA + Specifications
- * замість ручних SQL-рядків.
- */
 @Service
 @Transactional(readOnly = true)
 public class RealEstateService {

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-/** Зареєстрований клієнт (покупець/орендар). */
 @Entity
 @Table(name = "clients")
 public class Client {

@@ -2,11 +2,6 @@ package com.metrazh.agency.entity;
 
 import jakarta.persistence.*;
 
-/**
- * Довідник статусів об'єкта: У продажу / Вільний від оренди /
- * Продано (В архіві) / Орендовано (В архіві).
- * Ідентифікатори 1,2 = активні; 3,4 = архівні (див. RealEstateService).
- */
 @Entity
 @Table(name = "statuses")
 public class Status {

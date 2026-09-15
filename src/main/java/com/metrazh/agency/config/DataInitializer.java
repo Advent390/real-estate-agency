@@ -10,13 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Наповнення бази при першому старті застосунку.
- * Аналог init_db.py (schema.sql виконує Hibernate через ddl-auto=update,
- * а тут відтворено вміст seed.sql + створення адміна й тестових клієнтів
- * з валідними хешами паролів, як робив init_db.py).
- * Ідемпотентно: якщо довідники вже наповнені — нічого не робить.
- */
 @Component
 public class DataInitializer implements CommandLineRunner {
 

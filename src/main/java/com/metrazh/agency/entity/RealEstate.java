@@ -5,11 +5,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Загальні дані про об'єкт нерухомості (таблиця real_estate).
- * Специфіка залежно від типу винесена в Apartment / House / Office
- * (зв'язок 1:1 через спільний object_id — так само, як в оригінальній схемі).
- */
 @Entity
 @Table(name = "real_estate")
 public class RealEstate {

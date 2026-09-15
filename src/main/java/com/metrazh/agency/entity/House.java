@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-/** Специфіка для будинків. Спільний PK з real_estate (object_id). */
 @Entity
 @Table(name = "houses")
 public class House {

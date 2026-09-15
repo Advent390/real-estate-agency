@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-/**
- * Реєстрація / логін / логаут клієнта.
- * Аналог розділу "РЕЄСТРАЦІЯ / ЛОГІН КЛІЄНТА" з app.py.
- */
+/** Реєстрація / логін / логаут клієнта.*/
 @Controller
 public class AuthController {
 

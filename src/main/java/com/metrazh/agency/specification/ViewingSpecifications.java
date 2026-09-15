@@ -9,12 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Заявки на перегляд за період. Аналог get_recent_viewings_report(start, end)
- * з db.py. Предикати додаються лише за наявності значення (start/end != null),
- * щоб уникнути передачі null-параметра в SQL напряму (див. коментар у
- * RealEstateSpecifications щодо PostgreSQL/Hibernate 6 та CAST(... AS timestamp)).
- */
+/** Заявки на перегляд за період.*/
 public final class ViewingSpecifications {
 
     private ViewingSpecifications() {

@@ -2,7 +2,6 @@ package com.metrazh.agency.entity;
 
 import jakarta.persistence.*;
 
-/** Довідник типів об'єктів: Квартира / Будинок / Офіс. */
 @Entity
 @Table(name = "object_types")
 public class ObjectType {

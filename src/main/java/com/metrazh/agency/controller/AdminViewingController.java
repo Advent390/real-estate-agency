@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/** Аналог admin_viewings() / admin_viewing_status() з app.py. */
 @Controller
 public class AdminViewingController {
 

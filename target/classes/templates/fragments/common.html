@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<!-- Шапка сайту. headerClass='admin-header' для сторінок адмінки (як block header_class в base.html) -->
+<!-- Шапка сайту. headerClass='admin-header' для сторінок адмінки -->
 <div th:fragment="header(headerClass)">
     <header th:class="'header ' + ${headerClass}">
         <div class="header-inner">
@@ -29,7 +29,7 @@
          th:text="${msg.text}"></div>
 </div>
 
-<!-- Підвал сайту -->
+<!-- Нижній колонтитул сайту -->
 <div th:fragment="footer">
     <footer class="footer">
         <div>© <span th:text="${currentYear}">2026</span> Метраж — Агенція нерухомості в Миколаєві</div>

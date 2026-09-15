@@ -2,7 +2,6 @@ package com.metrazh.agency.entity;
 
 import jakarta.persistence.*;
 
-/** Довідник районів міста. */
 @Entity
 @Table(name = "districts")
 public class District {

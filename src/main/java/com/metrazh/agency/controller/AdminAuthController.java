@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-/** Логін/логаут адміністратора. Аналог розділу "АДМІНКА — ЛОГІН" з app.py. */
+/** Логін/логаут адміністратора.*/
 @Controller
 public class AdminAuthController {
 

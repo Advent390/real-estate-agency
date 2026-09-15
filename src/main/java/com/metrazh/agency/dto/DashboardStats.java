@@ -1,6 +1,6 @@
 package com.metrazh.agency.dto;
 
-/** Статистика для адмін-дашборду. Аналог db.get_stats(). */
+/** Статистика для адмін-дашборду.*/
 public class DashboardStats {
 
     private final long totalObjects;

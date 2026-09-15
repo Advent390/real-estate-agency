@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/** Аналог секції "ЗАЯВКИ НА ПЕРЕГЛЯД" з db.py. */
 @Service
 @Transactional(readOnly = true)
 public class ViewingService {

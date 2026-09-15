@@ -5,11 +5,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-/**
- * Аналог @app.template_filter('price') з app.py:
- * f"{int(value):,} грн".replace(',', ' ')
- * У шаблонах Thymeleaf викликається як ${@priceFormatter.format(obj.price)}.
- */
 @Component("priceFormatter")
 public class PriceFormatter {
 

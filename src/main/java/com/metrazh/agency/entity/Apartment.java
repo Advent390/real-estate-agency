@@ -2,7 +2,6 @@ package com.metrazh.agency.entity;
 
 import jakarta.persistence.*;
 
-/** Специфіка для квартир. Спільний PK з real_estate (object_id). */
 @Entity
 @Table(name = "apartments")
 public class Apartment {

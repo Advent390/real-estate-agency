@@ -2,11 +2,7 @@ package com.metrazh.agency.dto;
 
 import java.math.BigDecimal;
 
-/**
- * Фільтри пошуку/каталогу. Аналог dict `filters`, який повертала
- * функція `_parse_filters(request.args)` в оригінальному app.py.
- * Поля залишаються null, якщо параметр не переданий (як .get() у Python).
- */
+/** Фільтри пошуку/каталогу.*/
 public class SearchFilters {
 
     private Integer typeId;

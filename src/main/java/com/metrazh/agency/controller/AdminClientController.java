@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/** Аналог admin_clients() з app.py. */
 @Controller
 public class AdminClientController {
 

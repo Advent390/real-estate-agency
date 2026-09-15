@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-/** Адміністратор (співробітник агентства). Таблиця `users` в оригіналі. */
 @Entity
 @Table(name = "users")
 public class AdminUser {

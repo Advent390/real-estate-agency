@@ -17,11 +17,6 @@ import org.springframework.web.util.HtmlUtils;
 import java.math.BigDecimal;
 import java.util.Map;
 
-/**
- * CRUD об'єктів нерухомості в адмінці.
- * Аналог admin_object_new / admin_object_edit / admin_object_delete /
- * admin_object_status / _parse_object_form з app.py.
- */
 @Controller
 @RequestMapping("/admin/object")
 public class AdminObjectController {

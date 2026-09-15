@@ -1,6 +1,6 @@
 package com.metrazh.agency.util;
 
-/** Ключі атрибутів HttpSession. Аналог session['client_id'] тощо з Flask. */
+/** Ключі атрибутів HttpSession.*/
 public final class SessionKeys {
 
     public static final String CLIENT_ID = "clientId";

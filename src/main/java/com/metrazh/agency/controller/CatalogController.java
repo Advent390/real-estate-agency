@@ -18,10 +18,7 @@ import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 
-/**
- * Каталог для клієнта. Аналог маршрутів index() та object_detail()
- * з розділу "КАТАЛОГ ДЛЯ КЛІЄНТА" в app.py.
- */
+/** Каталог для клієнта.*/
 @Controller
 public class CatalogController {
 

@@ -7,12 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Сесійний аналог Flask flash()/get_flashed_messages(with_categories=true).
- * Повідомлення живуть у сесії до першого читання (base.html читає й одразу
- * очищає їх через {@link #consume(HttpServletRequest)}), тому працюють
- * однаково і з контролерів, і з interceptor'ів (де немає RedirectAttributes).
- */
 @Component
 public class FlashService {
 

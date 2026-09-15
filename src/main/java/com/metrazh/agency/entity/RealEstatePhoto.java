@@ -2,7 +2,6 @@ package com.metrazh.agency.entity;
 
 import jakarta.persistence.*;
 
-/** Додаткові фото об'єкта (1:M з RealEstate). */
 @Entity
 @Table(name = "real_estate_photos")
 public class RealEstatePhoto {

@@ -3,7 +3,7 @@ package com.metrazh.agency.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-/** Складений первинний ключ (client_id, object_id) для таблиці favorites. */
+/** ID (client_id, object_id) для таблиці favorites. */
 public class FavoriteId implements Serializable {
 
     private Integer client;

@@ -7,10 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-/**
- * Аналог декоратора @client_required з auth.py: маршрут доступний
- * лише залогіненому клієнту, інакше — flash-повідомлення і редірект на /login.
- */
 public class ClientAuthInterceptor implements HandlerInterceptor {
 
     private final FlashService flashService;

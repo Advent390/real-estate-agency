@@ -11,11 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import java.time.Year;
 import java.util.List;
 
-/**
- * Дані, доступні в усіх Thymeleaf-шаблонах.
- * Аналог @app.context_processor inject_globals() (isClientLogged/isAdminLogged/currentYear)
- * та get_flashed_messages(with_categories=true) (flashMessages) з app.py.
- */
 @ControllerAdvice
 public class GlobalModelAdvice {
 

@@ -16,14 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Звіти для адмін-панелі.
- * Аналог get_detailed_sold_objects() та get_recent_viewings_report() з db.py.
- * Фільтри по датах будуються через Specifications (Criteria API), а не
- * через JPQL з "CAST(:param AS timestamp) IS NULL OR ..." — останній варіант
- * ламається на PostgreSQL/Hibernate 6, коли параметр дорівнює null
- * (драйвер не завжди вгадує тип параметра всередині CAST).
- */
+/** Звіти для адмін-панелі.*/
 @Service
 @Transactional(readOnly = true)
 public class ReportService {
@@ -50,10 +43,7 @@ public class ReportService {
         return grouped;
     }
 
-    /**
-     * Заявки на перегляд за період. Якщо start не вказано — останні 7 днів
-     * (так само, як в оригіналі, коли дати не обрані на формі).
-     */
+    /** Заявки на перегляд за період. Якщо start не вказано — останні 7 днів.*/
     public List<Viewing> getRecentViewingsReport(LocalDate start, LocalDate end) {
         LocalDateTime startDt = start != null ? start.atStartOfDay() : LocalDateTime.now().minusDays(7);
         LocalDateTime endDt = end != null ? end.atTime(LocalTime.MAX) : null;

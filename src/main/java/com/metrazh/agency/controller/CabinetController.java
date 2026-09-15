@@ -19,7 +19,7 @@ import java.time.format.DateTimeParseException;
 
 /**
  * Особистий кабінет клієнта: обране, заявки на перегляд.
- * Ці маршрути захищені ClientAuthInterceptor (аналог @client_required).
+ * Ці маршрути захищені ClientAuthInterceptor.
  */
 @Controller
 public class CabinetController {
